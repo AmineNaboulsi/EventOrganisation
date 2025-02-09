@@ -3,7 +3,7 @@ namespace App\Config;
 
 use Attribute;
 
-#[Attribute(\Attribute::TARGET_CLASS)]
+#[Attribute(\Attribute::TARGET_METHOD)]
 class Route
 {
     public $uri;
@@ -14,7 +14,7 @@ class Route
     public $middleware;
 
     public function __construct(
-        string $uri,string $method,string $role = null,
+        string $uri,string $method = 'GET',string $role = null,
         array  $parametres = [] ,?string  $middleware = null)
     {
         $this->uri = $uri;
