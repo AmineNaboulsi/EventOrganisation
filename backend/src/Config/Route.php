@@ -14,7 +14,7 @@ class Route
     public $middleware;
 
     public function __construct(
-        string $uri,string $method = 'GET',string $role = null,
+        string $uri,string $method = '',string $role = null,
         array  $parametres = [] ,?string  $middleware = null)
     {
         $this->uri = $uri;

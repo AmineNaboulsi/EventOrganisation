@@ -15,26 +15,35 @@ class Routes{
     public static function getRoutes() : array{
         return self::$routes;
     }
-    public static function load() : void{
-        $controllers = realpath(__DIR__  . '/../Controller');
-        $controllerFiles = glob($controllers . '/*Controller.php');
-        foreach ($controllerFiles as $contoller) {
-            $className = 'App\\Controller\\' . pathinfo($contoller, PATHINFO_FILENAME);
-            $c = new \ReflectionClass($className);
-            $allcontrollersMethod = $c->getMethods();
-            foreach ($allcontrollersMethod as $method ) {
-                $allattributes = $method->getAttributes();
-                foreach ($allattributes as $att) {
-                    $routeInstance = $att->newInstance();
+    public static function load(): void
+    {
+        $controllersPath = realpath(__DIR__ . '/../Controller');
+        $controllerFiles = glob($controllersPath . '/*.php');
+    
+        foreach ($controllerFiles as $controllerFile) {
+            $className = "App\\Controller\\" . basename($controllerFile, '.php');
+            
+            if (!class_exists($className)) {
+                continue;
+            }
+    
+            $reflectionClass = new \ReflectionClass($className);
+            foreach ($reflectionClass->getMethods() as $method) {
+                $attributes = $method->getAttributes(Route::class);
+                foreach ($attributes as $attribute) {
+                    $routeInstance = $attribute->newInstance();
                     self::$routes[$routeInstance->method][$routeInstance->uri] = [
-                            'controller' => $contoller, 
-                            'method' => $method->getName(),
-                            'role' => $routeInstance->role,
-                            'middleware' => $routeInstance->middleware,
-                            'parametres' => $routeInstance->parametres,
+                        'controller' => $className,
+                        'method' => $method->getName(),
+                        'role' => $routeInstance->role,
+                        'middleware' => $routeInstance->middleware,
+                        'parametres' => $routeInstance->parametres,
                     ];
                 }
             }
         }
     }
+    
+  
+    
 }
