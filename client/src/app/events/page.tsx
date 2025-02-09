@@ -3,8 +3,17 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
+import { useState } from "react"
 
-const events = [
+type EventType = {
+    id: number,
+    title: string,
+    date: Date,
+    location: string,
+    image: string,
+    category: string,
+}
+const eventsData = [
   {
     id: 1,
     title: "UM6P Party",
@@ -32,6 +41,10 @@ const events = [
 ]
 
 export default function EventsPage() {
+    const [ events ,  setevents] = useState<EventType[]>([]);
+    setTimeout(() => {
+        setevents(eventsData);
+    }, 1000);
   return (
     <div className="min-h-screen py-12">
       <div className="max-w-7xl mx-auto px-4">
@@ -43,7 +56,7 @@ export default function EventsPage() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {events.map((event, index) => (
+          {(events && events.length> 0) ? events.map((event, index) => (
             <motion.div
               key={event.id}
               initial={{ opacity: 0, y: 20 }}
@@ -74,7 +87,11 @@ export default function EventsPage() {
                 </div>
               </Link>
             </motion.div>
-          ))}
+          )) : 
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12 col-span-4 py-20">
+                <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" className="animate-spin text-center justify-self-center will-change-transform" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>
+         </motion.div>
+          }
         </div>
 
         <div className="mt-12 flex justify-center gap-4">
