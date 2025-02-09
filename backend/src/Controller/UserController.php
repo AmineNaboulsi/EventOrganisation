@@ -4,28 +4,28 @@ namespace App\Controller;
 use App\Config\Route;
 class UserController{
 
-    #[Route("/signup" , 'POST')]
+    #[Route(uri:"/signin" , method:'POST' ,parametres:["email" => ["email"], "password" => ["string"]])]
     public function Signin(){
-        echo "Signin";
+        return "Signin";
     }
-    #[Route("/signup" , 'POST')]
+    #[Route(uri:"/signup" , method:'POST',parametres:["name" => ["string"] , "role" => ["string"] , "email" => ["email"], "password" => ["string"]])]
     public function Home(){
-        echo "ssss";
-    }
+        return "signup";
+    } 
     #[Route("/users" , 'GET')]
     public function Save(){
-        echo "Save";
+        return "Save";
     }
     #[Route("/user/add" , 'POST')]
     public function AddUser(){
-        echo "Save";
+        return "Save";
     }   
     #[Route("/user/edit" , 'PUT')]
     public function EditUser(){
-        echo "EditUser";
+        return "EditUser";
     }
     #[Route("/user/delete" , 'DELETE')]
     public function DelUser(){
-        echo "DelUser";
+        return "DelUser";
     }
 }

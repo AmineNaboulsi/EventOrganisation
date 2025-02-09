@@ -19,14 +19,11 @@ class Routes{
     {
         $controllersPath = realpath(__DIR__ . '/../Controller');
         $controllerFiles = glob($controllersPath . '/*.php');
-    
         foreach ($controllerFiles as $controllerFile) {
             $className = "App\\Controller\\" . basename($controllerFile, '.php');
-            
             if (!class_exists($className)) {
                 continue;
             }
-    
             $reflectionClass = new \ReflectionClass($className);
             foreach ($reflectionClass->getMethods() as $method) {
                 $attributes = $method->getAttributes(Route::class);
