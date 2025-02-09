@@ -7,7 +7,6 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useToast } from "@/hooks/use-toast"
 
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false)
@@ -16,18 +15,18 @@ export default function SignUp() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const router = useRouter()
-  const { toast } = useToast()
+  // const { toast } = useToast()
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
     setIsLoading(true)
 
     if (password !== confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Passwords do not match.",
-        variant: "destructive",
-      })
+      // toast({
+      //   title: "Error",
+      //   description: "Passwords do not match.",
+      //   variant: "destructive",
+      // })
       setIsLoading(false)
       return
     }
@@ -36,18 +35,18 @@ export default function SignUp() {
       await new Promise((resolve) => setTimeout(resolve, 2000))
 
       console.log("Registered with:", { name, email, password })
-      toast({
-        title: "Success",
-        description: "Your account has been created. Please check your email to verify your account.",
-      })
+      // toast({
+      //   title: "Success",
+      //   description: "Your account has been created. Please check your email to verify your account.",
+      // })
       router.push("/signin") 
     } catch (error) {
       console.error("Registration failed:", error)
-      toast({
-        title: "Error",
-        description: "Failed to create account. Please try again.",
-        variant: "destructive",
-      })
+      // toast({
+      //   title: "Error",
+      //   description: "Failed to create account. Please try again.",
+      //   variant: "destructive",
+      // })
     } finally {
       setIsLoading(false)
     }

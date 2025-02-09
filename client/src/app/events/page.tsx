@@ -4,47 +4,48 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
+import Image from 'next/image'
 
 type EventType = {
     id: number,
     title: string,
-    date: Date,
+    date: string,
     location: string,
     image: string,
     category: string,
 }
 
-const eventsData = [
-  {
-    id: 1,
-    title: "UM6P Party",
-    date: "2023-09-15",
-    location: " , Mar",
-    image: "https://i.ibb.co/YT7KJtFB/pexels-wendywei-1190297.jpg",
-    category: "Party & Tech",
-  },
-  {
-    id: 2,
-    title: "Music Festival",
-    date: "2023-10-01",
-    location: "Austin, TX",
-    image: "https://i.ibb.co/m59t6S3C/pexels-joshsorenson-976866.jpg",
-    category: "Music",
-  },
-  {
-    id: 3,
-    title: "Amine's engaged",
-    date: "2023-11-05",
-    location: "engaged married event",
-    image: "https://i.ibb.co/tMHndMZ6/pexels-asadphoto-169198.jpg",
-    category: "married",
-  },
-]
-export default function EventsPage() {
 
-    const [ events ,  setevents] = useState<EventType[]>();
+export default function EventsPage() {
+  const eventsData = [
+    {
+      id: 1,
+      title: "UM6P Party",
+      date: "2023-09-15",
+      location: " , Mar",
+      image: "https://i.ibb.co/YT7KJtFB/pexels-wendywei-1190297.jpg",
+      category: "Party & Tech",
+    },
+    {
+      id: 2,
+      title: "Music Festival",
+      date: "2023-10-01",
+      location: "Austin, TX",
+      image: "https://i.ibb.co/m59t6S3C/pexels-joshsorenson-976866.jpg",
+      category: "Music",
+    },
+    {
+      id: 3,
+      title: "Amine's engaged",
+      date: "2023-11-05",
+      location: "engaged married event",
+      image: "https://i.ibb.co/tMHndMZ6/pexels-asadphoto-169198.jpg",
+      category: "married",
+    },
+  ]
+    const [ events ,  setevents] = useState<EventType[]>([]);
     setTimeout(() => {
-        events?.forEach((event:EventType)=>{
+        eventsData?.forEach((event:EventType)=>{
           setevents([...events, event]);
         })
     }, 1000);
@@ -71,7 +72,7 @@ export default function EventsPage() {
                 <div className="p-4 space-y-4">
                   <div className="relative h-48 overflow-hidden rounded">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
-                    <img
+                    <Image
                       src={event.image || "/placeholder.svg"}
                       alt={event.title}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"

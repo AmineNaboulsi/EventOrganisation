@@ -1,5 +1,3 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import type React from "react" 
 
 export default function AuthLayout({

@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { useToast } from "@/hooks/use-toast"
 
 export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false)
@@ -16,7 +15,6 @@ export default function SignIn() {
   const [password, setPassword] = useState("")
   const [rememberMe, setRememberMe] = useState(false)
   const router = useRouter()
-  const { toast } = useToast()
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -27,18 +25,18 @@ export default function SignIn() {
       await new Promise((resolve) => setTimeout(resolve, 2000))
 
       console.log("Logged in with:", { email, password, rememberMe })
-      toast({
-        title: "Success",
-        description: "You have successfully signed in.",
-      })
-      //router.push("/dashboard") 
+      // toast({
+      //   title: "Success",
+      //   description: "You have successfully signed in.",
+      // })
+      router.push("/dashboard") 
     } catch (error) {
       console.error("Login failed:", error)
-      toast({
-        title: "Error",
-        description: "Failed to sign in. Please check your credentials and try again.",
-        variant: "destructive",
-      })
+      // toast({
+      //   title: "Error",
+      //   description: "Failed to sign in. Please check your credentials and try again.",
+      //   variant: "destructive",
+      // })
     } finally {
       setIsLoading(false)
     }
