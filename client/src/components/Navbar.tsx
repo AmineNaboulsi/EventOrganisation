@@ -18,12 +18,12 @@ export default function Navbar() {
             <Link href="/events" className="text-gray-300 hover:text-white transition duration-300">
               Events
             </Link>
-            <Link href="/signin">
+            <Link href="/auth/signin">
               <Button className="text-gray-300 hover:bg-transparent bg-transparent hover:text-white">
                 Sign In
               </Button>
             </Link>
-            <Link href="/signup">
+            <Link href="/auth/signup">
               <Button className="bg-[#a56bf0] text-black hover:bg-[#6d499c]/94 rounded-md">Sign Up</Button>
             </Link>
           </div>

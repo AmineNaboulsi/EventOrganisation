@@ -4,7 +4,6 @@ import Navbar from '../components/Navbar'
 import Footer from "../components/Footer"
 import type React from "react"
 
-const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
     title: "Eventler",
@@ -19,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex flex-col min-h-screen bg-black text-white`}>
+      <body className={`flex flex-col min-h-screen bg-black text-white`}>
         <Navbar />
         <main className="flex-grow">{children}</main>
         <Footer />
