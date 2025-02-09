@@ -13,6 +13,7 @@ type EventType = {
     image: string,
     category: string,
 }
+
 const eventsData = [
   {
     id: 1,
@@ -39,11 +40,13 @@ const eventsData = [
     category: "married",
   },
 ]
-
 export default function EventsPage() {
-    const [ events ,  setevents] = useState<EventType[]>([]);
+
+    const [ events ,  setevents] = useState<EventType[]>();
     setTimeout(() => {
-        setevents(eventsData);
+        events?.forEach((event:EventType)=>{
+          setevents([...events, event]);
+        })
     }, 1000);
   return (
     <div className="min-h-screen py-12">
