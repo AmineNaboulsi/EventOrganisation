@@ -1,29 +1,24 @@
 <?php
 
-namespace App\Model;
+namespace App\Model\Dto;
 
-class User{
+class SignUpDto{
 
-    private int $id;
     private string $name;
     private string $email;
     private string $password;
     private string $role;
-    private bool $status;
 
-    public function __construct($id=0, $name="", $email="", $password="", $role="", $status=0){
-        $this->id = $id;
+    public function __construct($name="", $email="", $password="", $role=""){
         $this->name = $name;
         $this->email = $email;
         $this->password = $password;
         $this->role = $role;
-        $this->status = $status;
     }
-    public function getId() { return $this->id ; }
     public function getName() { return $this->name ; }
     public function getEmail() { return $this->email ; }
     public function getPassword() { return $this->password ; }
     public function getRole() { return $this->role ; }
-    public function getStatus() { return $this->status ; }
+    public function getStatus() { return $this->role =='organisator' ?'false' :'true' ; }
     
 }

@@ -45,7 +45,7 @@ class ValidationController{
                     }
                     break;
                 case 'password':
-                    if (!preg_match('/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{8,12}$/', $data[$para])) {
+                    if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z]).{8,25}$/', $data[$para])) {
                         http_response_code(400);
                         header('Content-Type: application/json');
                         echo json_encode(['error' => 'The password must be between 8 and 12 characters long and contain at least one letter and one number']);

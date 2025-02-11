@@ -3,7 +3,7 @@
 namespace App\Core;
 use App\Config\Routes;
 use Exception;
-
+use App\Services\ValidationController;
 class Router{
 
     /**
@@ -28,9 +28,9 @@ class Router{
             $parametres = $route['parametres'];
 
             $requiredParams = self::requiredParams($methodhttp);
-            $errors = self::validateParameters($parametres ,$requiredParams) ?? [];
+            $valide = ValidationController::Validation($parametres ,$requiredParams);
             try{
-                if(count($errors) === 0){
+                if($valide){
                     $c = new $controller;
                     // if($middleware){
                     //     $middleware = new $middleware;
@@ -38,16 +38,11 @@ class Router{
                     // }
                     echo json_encode($c->$method());
                     return;
-                }else{
-                    http_response_code(320);
-                    echo json_encode([
-                        "message" => join(", ", $errors),
-                    ]) ;
-                    return;
                 }
             }catch(Exception $e){
                 echo json_encode([
-                    "status" => false
+                    "status" => false ,
+                    "error" => $e->getMessage()
                 ]) ;
             }
         }else{
@@ -87,9 +82,13 @@ class Router{
      *
      * @param array $requiredParams
      */
-    public static function validateParameters($requiredParams){
+    public static function validateParameters($parametres ,$requiredParams){
         $errors = [];
-        foreach ($requiredParams as $param => $Dtype) {
+        foreach ($parametres as $param => $Dtype) {
+            if(!isset($requiredParams[$param])){
+                $errors[] = "Missing parametres";
+                break;  
+            }
             switch ($Dtype) {
                 case 'string':
                     if (!is_string($requiredParams[$param])) {
@@ -103,7 +102,7 @@ class Router{
                     break;
                 case 'email':
                     if (!filter_var($requiredParams[$param], FILTER_VALIDATE_EMAIL)) {
-                        $errors[] = "Must be a valid email";
+                        $errors[] = "Must be a valid email ";
                     }
                     break;
                 default:

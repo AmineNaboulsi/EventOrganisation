@@ -2,15 +2,22 @@
 
 namespace App\Controller;
 use App\Config\Route;
+use App\Model\Dto\SignUpDto;
+use App\Model\Dto\LoginDto;
+use App\Repository\UserRepository;
 class UserController{
 
-    #[Route(uri:"/signin" , method:'POST' ,parametres:["email" => "email", "password" => "password"])]
+    #[Route(uri:"/signin" , method:'POST' ,parametres:["email" => "email","password" => "password"])]
     public function Signin(){
-        return "Signin";
+        $User = new LoginDto(email:$_POST["email"],password:$_POST["password"],role:$_POST["role"]);
+        $UserRepository = new UserRepository();
+        return $UserRepository->signin($User);
     }
-    #[Route(uri:"/signup" , method:'POST',parametres:["name" => "string" , "role" => "string" , "email" => "email", "password" => "string"])]
-    public function Home(){
-        return "signup";
+    #[Route(uri:"/signup" , method:'POST',parametres:["name" => "string" ,"role" => "string" ,"email" => "email","password" => "password"])]
+    public function Signup(){
+        $User = new SignUpDto(email:$_POST["email"],name:$_POST["name"],password:$_POST["password"],role:$_POST["role"]);
+        $UserRepository = new UserRepository();
+        return $UserRepository->signup($User);
     } 
     #[Route("/users" , 'GET')]
     public function Save(){

@@ -7,46 +7,49 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { toast } from "sonner";
+import { tree } from "next/dist/build/templates/app-page"
+
 
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false)
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [isUser, setUser] = useState(true)
   const [confirmPassword, setConfirmPassword] = useState("")
   const router = useRouter()
-  // const { toast } = useToast()
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
     setIsLoading(true)
 
     if (password !== confirmPassword) {
-      // toast({
-      //   title: "Error",
-      //   description: "Passwords do not match.",
-      //   variant: "destructive",
-      // })
+      toast.success("Password Not match!");
       setIsLoading(false)
       return
     }
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      console.log("Registered with:", { name, email, password })
-      // toast({
-      //   title: "Success",
-      //   description: "Your account has been created. Please check your email to verify your account.",
-      // })
-      router.push("/signin") 
-    } catch (error) {
-      console.error("Registration failed:", error)
-      // toast({
-      //   title: "Error",
-      //   description: "Failed to create account. Please try again.",
-      //   variant: "destructive",
-      // })
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      const url = process.env.NEXT_PUBLIC_API_URL;
+      const parametres = new FormData();
+      parametres.append('name', name);
+      parametres.append('email', email);
+      parametres.append('password', password);
+      parametres.append('role', isUser? 'user' : 'organisator');
+      const res = await fetch(`${url}/signup`,{
+        method : 'POST',
+        body : parametres
+      });
+      const data = await res.json();
+      if(data.error){
+        toast.error(data.error);
+        return ;
+      }
+      router.push("/auth/signin") 
+    } catch {
+      toast.error("Registration failed, please try later");
     } finally {
       setIsLoading(false)
     }
@@ -64,8 +67,20 @@ export default function SignUp() {
         <p className="text-gray-400">Enter your details below to create your account</p>
       </div>
       <div className="space-y-4">
+        
         <form onSubmit={onSubmit} className="space-y-4">
-          <div className="grid gap-4">
+          <div className="grid gap-4 mt-3">
+            <div className="relative grid grid-cols-1 h-8 gap-2  rounded-md w-full">
+              <div className="grid grid-cols-2 items-start gap-2 text-center">
+              <div className={`absolute top-0 bottom-0 bg-[#ffffffcf] ${isUser ? 'left-0' : 'left-52'} w-[50%]`}></div>
+                <span 
+                onClick={() => setUser(true)}
+                className={`${isUser? 'text-black' : 'text-white'} z-10 cursor-pointer`}>user</span>
+                <span
+                onClick={() => setUser(false)}
+                className={`${isUser? 'text-white' : 'text-black'} z-10 cursor-pointer`}>Organisator</span>
+              </div>
+            </div>
             <div className="grid gap-2">
               <Label htmlFor="name">Full Name</Label>
               <Input
@@ -121,6 +136,8 @@ export default function SignUp() {
                 required
               />
             </div>
+           
+           
           </div>
           <Button type="submit" className="w-full bg-[#a56bf0] text-black hover:bg-[#a56bf0]/90" disabled={isLoading}>
             {isLoading ? "Creating account..." : "Create Account"}
