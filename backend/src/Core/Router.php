@@ -14,11 +14,11 @@ class Router{
      */
     public static function dispatch() : void{
         $uri = $_SERVER['REQUEST_URI'];
-        $method = $_SERVER['REQUEST_METHOD'];
+        $methodhttp = $_SERVER['REQUEST_METHOD'];
         $routes = Routes::getRoutes();
-        $route = $routes[$method][$uri] ?? null;
+        $route = $routes[$methodhttp][$uri] ?? null;
         //Mime
-        // header('Content-Type: application/json');
+        header('Content-Type: application/json');
         header_remove('X-Powered-By');
         if($route){
             $controller = $route['controller'];
@@ -27,7 +27,7 @@ class Router{
             $middleware = $route['middleware'];
             $parametres = $route['parametres'];
 
-            $requiredParams = self::requiredParams($method);
+            $requiredParams = self::requiredParams($methodhttp);
             $errors = self::validateParameters($parametres ,$requiredParams) ?? [];
             try{
                 if(count($errors) === 0){
@@ -41,7 +41,7 @@ class Router{
                 }else{
                     http_response_code(320);
                     echo json_encode([
-                        "message" => 'Invalid parameters'
+                        "message" => join(", ", $errors),
                     ]) ;
                     return;
                 }
@@ -60,14 +60,13 @@ class Router{
     /**
      * Get the parametres source
      * 
-     * @param string @method
+     * @param string @method 
      * @return array
      */
     public static function requiredParams($method) : array {
         if ($method === 'GET' || $method === 'DELETE') {
             return $_GET;
         }
-        echo 'email : ' . $_POST['email'];
     
         if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
             $contentType = $_SERVER["CONTENT_TYPE"] ?? '';
@@ -89,7 +88,6 @@ class Router{
      * @param array $requiredParams
      */
     public static function validateParameters($requiredParams){
-        // parametres:["email" => ["email"], "password" => ["string"]
         $errors = [];
         foreach ($requiredParams as $param => $Dtype) {
             switch ($Dtype) {
