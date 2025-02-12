@@ -10,14 +10,16 @@ export default function ClientNavigation({childrenA}:any) {
   
   return (
     <>
-      {pathname !== '/dashboard' &&
+      {pathname !== '/dashboard' ?
       (
           <>
           <Navbar />
                 <main className="flex-grow">{childrenA}</main>
           <Footer />
           </>
-      )}
+      ):
+      <>{childrenA}</>
+      }
     </>
   )
 }

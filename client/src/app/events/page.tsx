@@ -7,19 +7,20 @@ import { useEffect, useState } from "react"
 import Image from 'next/image'
 
 type EventType = {
-    id: number,
-    title: string,
-    date: string,
-    location: string,
-    image: string,
-    category: string,
+  id: number,
+  title: string,
+  datetime: string,
+  description: string,
+  location: string,
+  image: string,
+  category: string,
 }
+
 type paginationType = {
   currentpage: number,
   limit: number,
   total: number | undefined,
 }
-
 
 export default function EventsPage() {
       //Event State
@@ -104,7 +105,7 @@ export default function EventsPage() {
               transition={{ delay: index * 0.1 }}
               className="gradient-border group cursor-pointer"
             >
-              <Link href={`/pp`}>
+              <Link href={`/events/${event.id}`}>
                 <div  className="p-4 space-y-4">
                   <div className="relative h-48 overflow-hidden rounded">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
