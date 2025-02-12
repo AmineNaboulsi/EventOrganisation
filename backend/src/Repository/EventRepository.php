@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 use App\Core\Database;
-
 class EventRepository{
 
     /**
@@ -28,6 +27,24 @@ class EventRepository{
             'count'=> $this->TotalEvents(),
             'events' => $result
         ];
+    }
+
+     /**
+    * Find Events by id
+    * 
+    * @param $id
+    * @return array
+    */
+    public function FindById($id){
+        $con = Database::connect();
+            $sql = "SELECT e.id , e.title, e.description , e.location, e.datetime , e.image , c.name as category FROM events e
+                JOIN Categories c ON c.id = e.id
+                WHERE e.id=:id ";
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result ;
     }
 
     /**

@@ -7,12 +7,49 @@ use App\Model\User;
 use App\Model\Dto\SignUpDto;
 use App\Model\Dto\LoginDto;
 use App\Repository\interfaces\UserRepositoryInterface;
+use PDO;
 
 class UserRepository implements UserRepositoryInterface {
 
+    /**
+     * Login to the platform with token generation
+     * 
+     * @param object
+     * @return array
+     */
     public function signin(LoginDto $user){
+        $con = Database::connect();
+        $query = "SELECT password FROM users WHERE email = :email";
+        $stmt = $con->prepare($query);
+        if (!$stmt->execute([ ':email' => $user->getEmail() ])) {
+            return [
+                "error" => "Error during login, please try again later"
+            ];
+        }
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         
+        if (!$result) {
+            return [
+                "error" => "Account not found"
+            ];
+        }
+        if(password_verify($user->getPassword() , $result['password'])){
+            return [
+                "status" => true,
+                "message" => "Login successfully"
+            ];
+        }else{
+            return [
+                "error" => "Account not found"
+            ];
+        }
     }
+     /**
+     * Register with new account accept role use , organisator
+     * 
+     * @param object
+     * @return array
+     */
     public function signup(SignUpDto $user){
         $con = Database::connect();
         if($this->findbyEmail($user->getEmail())) 
@@ -23,10 +60,11 @@ class UserRepository implements UserRepositoryInterface {
         }
         $query = "INSERT INTO users (name, email, password, role, isActivated) VALUES (:name, :email, :password, :role, :status)";
         $stmt = $con->prepare($query);
+        $password_hached = password_hash($user->getPassword() , PASSWORD_ARGON2I);
         $stmt->execute([
             ':name' => $user->getName(),
             ':email' => $user->getEmail(),
-            ':password' => $user->getPassword(),
+            ':password' => $password_hached,
             ':role' => $user->getRole(),
             ':status' => $user->getStatus()
         ]);
@@ -51,6 +89,12 @@ class UserRepository implements UserRepositoryInterface {
     public function find(int $id){
 
     }
+     /**
+     * Check if the email is all read used
+     * 
+     * @param object
+     * @return array
+     */
     public function findbyEmail(string $email){
         $con = Database::connect();
         $query = "SELECT email FROM users WHERE email = :email";

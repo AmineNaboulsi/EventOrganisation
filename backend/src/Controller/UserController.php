@@ -12,9 +12,9 @@ class UserController{
      * 
      * @return array
      */
-    #[Route(uri:"/signin" , method:'POST' ,parametres:["email" => "email","password" => "password"])]
+    #[Route(uri:"/signin" , method:'POST' ,parametres:["email" => "email","password" => "string"])]
     public function Signin(){
-        $User = new LoginDto(email:$_POST["email"],password:$_POST["password"],role:$_POST["role"]);
+        $User = new LoginDto(email:$_POST["email"],password:$_POST["password"]);
         $UserRepository = new UserRepository();
         return $UserRepository->signin($User);
     }

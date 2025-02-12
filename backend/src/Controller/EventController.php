@@ -6,6 +6,15 @@ use App\Repository\EventRepository;
 
 class EventController{
     /**
+     * 
+     * 
+     */
+    #[Route(uri:"/event" , method:'GET' , parametres:[ "id" => 'int' ])]
+    public function FindById(){
+        $Repository = new EventRepository();
+        return $Repository->FindById($_GET['id']);
+    }
+    /**
      * Edit all events information by Id 
      * 
      * @return array

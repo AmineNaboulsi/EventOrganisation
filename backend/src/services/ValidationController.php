@@ -14,7 +14,6 @@ class ValidationController{
     public static function Validation($parametres , $data){ 
         foreach ($parametres as $para => $dtype) {
             if (!isset($data[$para]) ) {
-                var_dump($para);
                 // http_response_code(400);
                 // header('Content-Type: application/json');
                 echo json_encode(['error' => 'Missing parametres']);
