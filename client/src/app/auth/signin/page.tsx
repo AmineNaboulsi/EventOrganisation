@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import { toast } from "sonner";
 
 export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false)
@@ -21,25 +22,32 @@ export default function SignIn() {
     setIsLoading(true)
 
     try {
-      //Just an Exemple for loading time after log in
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      console.log("Logged in with:", { email, password, rememberMe })
-      // toast({
-      //   title: "Success",
-      //   description: "You have successfully signed in.",
-      // })
-      router.push("/dashboard") 
-    } catch (error) {
-      console.error("Login failed:", error)
-      // toast({
-      //   title: "Error",
-      //   description: "Failed to sign in. Please check your credentials and try again.",
-      //   variant: "destructive",
-      // })
+      // await new Promise((resolve) => setTimeout(resolve, 500))
+      const url = process.env.NEXT_PUBLIC_API_URL;
+      const parametres = new FormData();
+      parametres.append('email', email);
+      parametres.append('password', password);
+      const res = await fetch(`${url}/signin`,{
+        method : 'POST',
+        body : parametres
+      });
+      if(!res.ok){
+        toast.error("Error: our service face some issues ,please try again later");
+        return ;
+      }
+      const data = await res.json();
+      if(data.error){
+        toast.error(data.error);
+        return ;
+      }
+      toast.error(data.message);
+      router.push("/events") 
+    } catch {
+      toast.error("Login failed, please try later");
     } finally {
       setIsLoading(false)
     }
+
   }
 
   return (

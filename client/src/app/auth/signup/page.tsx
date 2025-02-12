@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner";
-import { tree } from "next/dist/build/templates/app-page"
 
 
 export default function SignUp() {
@@ -42,6 +41,10 @@ export default function SignUp() {
         method : 'POST',
         body : parametres
       });
+      if(!res.ok){
+        toast.error("Error: our service face some issues ,please try again later");
+        return ;
+      }
       const data = await res.json();
       if(data.error){
         toast.error(data.error);
