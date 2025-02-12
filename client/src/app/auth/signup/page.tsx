@@ -31,7 +31,7 @@ export default function SignUp() {
     }
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      // await new Promise((resolve) => setTimeout(resolve, 500))
       const url = process.env.NEXT_PUBLIC_API_URL;
       const parametres = new FormData();
       parametres.append('name', name);

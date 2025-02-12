@@ -6,6 +6,7 @@ use Exception;
 use App\Services\ValidationController;
 class Router{
 
+    
     /**
      * Dispatch requests to a specific controller and method
      *
@@ -13,7 +14,7 @@ class Router{
      * @throws Exception
      */
     public static function dispatch() : void{
-        $uri = $_SERVER['REQUEST_URI'];
+        $uri = parse_url($_SERVER['REQUEST_URI'] , PHP_URL_PATH);
         $methodhttp = $_SERVER['REQUEST_METHOD'];
         $routes = Routes::getRoutes();
         $route = $routes[$methodhttp][$uri] ?? null;
@@ -48,7 +49,8 @@ class Router{
         }else{
             http_response_code(404);
             echo json_encode([
-                "status" => false
+                "status" => false ,
+                'error' => 'Route not found'
             ]) ;
         }
     }
@@ -77,39 +79,6 @@ class Router{
     
         return [];
     }
-     /**
-     * Validate request parameters
-     *
-     * @param array $requiredParams
-     */
-    public static function validateParameters($parametres ,$requiredParams){
-        $errors = [];
-        foreach ($parametres as $param => $Dtype) {
-            if(!isset($requiredParams[$param])){
-                $errors[] = "Missing parametres";
-                break;  
-            }
-            switch ($Dtype) {
-                case 'string':
-                    if (!is_string($requiredParams[$param])) {
-                        $errors[] = "Must be a string";
-                    }
-                    break;
-                case 'int':
-                    if (!filter_var($requiredParams[$param], FILTER_VALIDATE_INT)) {
-                        $errors[] = "Must be an integer";
-                    }
-                    break;
-                case 'email':
-                    if (!filter_var($requiredParams[$param], FILTER_VALIDATE_EMAIL)) {
-                        $errors[] = "Must be a valid email ";
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        return $errors;
-    }
+  
 }
 

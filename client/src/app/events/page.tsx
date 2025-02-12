@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from 'next/image'
 
 type EventType = {
@@ -14,38 +14,77 @@ type EventType = {
     image: string,
     category: string,
 }
+type paginationType = {
+  currentpage: number,
+  limit: number,
+  total: number | undefined,
+}
 
 
 export default function EventsPage() {
+      //Event State
       const [ events ,  setevents] = useState<EventType[]>([]);
-      setTimeout(() => {
-      setevents([
+      
+      //Event State
+      const [ pagination , setpagination] = useState<paginationType>(
         {
-          id: 1,
-          title: "UM6P Party",
-          date: "2023-09-15",
-          location: " , Mar",
-          image: "https://i.ibb.co/YT7KJtFB/pexels-wendywei-1190297.jpg",
-          category: "Party & Tech",
-        },
-        {
-          id: 2,
-          title: "Music Festival",
-          date: "2023-10-01",
-          location: "Austin, TX",
-          image: "https://i.ibb.co/m59t6S3C/pexels-joshsorenson-976866.jpg",
-          category: "Music",
-        },
-        {
-          id: 3,
-          title: "Amine's engaged",
-          date: "2023-11-05",
-          location: "engaged married event",
-          image: "https://i.ibb.co/tMHndMZ6/pexels-asadphoto-169198.jpg",
-          category: "married",
-        },
-      ]);
-    }, 1000);
+          currentpage: 1,
+          limit: 2,
+          total: undefined,
+        }
+      );
+
+      //Fetch Envents Data
+      const FetchEvents = async ()=>{
+        setevents([])
+        console.log(pagination.currentpage)
+        const offset = (pagination.currentpage - 1 )==0 ? 0 : ((pagination.currentpage-1) * pagination.limit) ;
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events?limit=${pagination.limit}&offset=${offset}`);
+        if(!res.ok){
+          return ;
+        }
+        const data = await res.json();
+        setevents(data?.events);
+        setpagination((prev)=>({
+          ...prev ,
+          total : Math.ceil(data?.count / prev.limit)
+        }));
+
+      }
+
+      //Initilisation
+      useEffect(() => {
+        FetchEvents();
+      },[pagination.currentpage])
+
+      //Pagination Click
+      const handlePaginationClick = (event: React.MouseEvent<HTMLDivElement>) =>{
+        const target = event.target as HTMLElement;
+        if (target.tagName === "BUTTON") {
+          const pageNumber = Number(target.dataset.index);
+          if (!isNaN(pageNumber)) {
+            setpagination((prev)=>({
+              ...prev ,
+              currentpage : pageNumber + 1
+            }));
+          }
+        }
+      }
+      //
+      // const PrevouisPage = () =>{
+      //   if(pagination.currentpage>=1){
+      //     setpagination((prev)=>({
+      //       ...prev ,
+      //       currentpage : prev.currentpage -1
+      //     }));
+      //   }
+      // }
+      // const NextPage = () =>{
+      //   setpagination((prev)=>({
+      //     ...prev ,
+      //     currentpage : prev.currentpage + 1 
+      //   }));
+      // }
   return (
     <div className="min-h-screen py-12">
       <div className="max-w-7xl mx-auto px-4">
@@ -65,7 +104,7 @@ export default function EventsPage() {
               transition={{ delay: index * 0.1 }}
               className="gradient-border group cursor-pointer"
             >
-              <Link href={`/events/${event.id}`}>
+              <Link href={`/pp`}>
                 <div  className="p-4 space-y-4">
                   <div className="relative h-48 overflow-hidden rounded">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
@@ -76,7 +115,7 @@ export default function EventsPage() {
                       height={500}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     />
-                    <span className="absolute top-2 right-2 z-20 bg-[#00E599]/90 text-black px-2 py-1 rounded text-sm">
+                    <span className="absolute top-2 right-2 z-20 bg-[#a56bf0]/90 text-black px-2 py-1 rounded text-sm">
                       {event.category}
                     </span>
                   </div>
@@ -96,15 +135,25 @@ export default function EventsPage() {
          </motion.div>
           }
         </div>
-
-        <div className="mt-12 flex justify-center gap-4">
-          <Button variant="outline" className="border-[#00E599]/20 hover:border-[#00E599]/40">
-            Previous
-          </Button>
-          <Button variant="outline" className="border-[#00E599]/20 hover:border-[#00E599]/40">
-            Next
-          </Button>
-        </div>
+          {pagination.total != undefined &&(
+            <div className="mt-12 flex justify-center gap-4">
+              <Button 
+              variant="outline" className="border-[#00E599]/20 hover:border-[#00E599]/40">
+                  {"<"} 
+              </Button>
+              <div onClick={handlePaginationClick} className="flex gap-2">
+                {Array.from({length : pagination.total}).map((_, i:number)=>(
+                  <Button key={i} data-index={i} className="border-[#00E599]/20 hover:border-[#00E599]/40">
+                      {i+1} 
+                  </Button>
+                ))}
+              </div>
+              <Button 
+                variant="outline" className="border-[#00E599]/20 hover:border-[#00E599]/40">
+                    {">"} 
+              </Button>
+            </div>
+          )}
       </div>
     </div>
   )
