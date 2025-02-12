@@ -6,5 +6,5 @@ const nextConfig = {
         domains: ['i.ibb.co'],
       },
 }
-module.exports = nextConfig
+module.exports = nextConfig 
   
