@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner";
+import Cookies from 'js-cookie';
 
 export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false)
@@ -41,6 +42,7 @@ export default function SignIn() {
         return ;
       }
       toast.error(data.message);
+      Cookies.set('authtoken', data.token, { expires: 1 });
       router.push("/events") 
     } catch {
       toast.error("Login failed, please try later");

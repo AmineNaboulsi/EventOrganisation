@@ -8,6 +8,7 @@ use App\Model\Dto\SignUpDto;
 use App\Model\Dto\LoginDto;
 use App\Repository\interfaces\UserRepositoryInterface;
 use PDO;
+use App\Services\Jwtgenerator;
 
 class UserRepository implements UserRepositoryInterface {
 
@@ -19,7 +20,7 @@ class UserRepository implements UserRepositoryInterface {
      */
     public function signin(LoginDto $user){
         $con = Database::connect();
-        $query = "SELECT password FROM users WHERE email = :email";
+        $query = "SELECT id , password FROM users WHERE email = :email";
         $stmt = $con->prepare($query);
         if (!$stmt->execute([ ':email' => $user->getEmail() ])) {
             return [
@@ -36,7 +37,8 @@ class UserRepository implements UserRepositoryInterface {
         if(password_verify($user->getPassword() , $result['password'])){
             return [
                 "status" => true,
-                "message" => "Login successfully"
+                "message" => "Login successfully",
+                "token" => Jwtgenerator::generateToken($result['id'])
             ];
         }else{
             return [
