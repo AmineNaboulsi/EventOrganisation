@@ -6,6 +6,8 @@ RewriteEngine On
 
 # Rediriger toutes les requêtes vers index.php sauf si le fichier ou le dossier existe
 
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
 
 RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f

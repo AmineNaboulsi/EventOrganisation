@@ -30,7 +30,7 @@ export default function EventsPage() {
       const [ pagination , setpagination] = useState<paginationType>(
         {
           currentpage: 1,
-          limit: 2,
+          limit: 6,
           total: undefined,
         }
       );

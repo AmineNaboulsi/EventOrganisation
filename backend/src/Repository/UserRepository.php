@@ -20,7 +20,7 @@ class UserRepository implements UserRepositoryInterface {
      */
     public function signin(LoginDto $user){
         $con = Database::connect();
-        $query = "SELECT id , password FROM users WHERE email = :email";
+        $query = "SELECT id ,role, password FROM users WHERE email = :email";
         $stmt = $con->prepare($query);
         if (!$stmt->execute([ ':email' => $user->getEmail() ])) {
             return [
@@ -38,6 +38,7 @@ class UserRepository implements UserRepositoryInterface {
             return [
                 "status" => true,
                 "message" => "Login successfully",
+                "role" => $result['role'] ,
                 "token" => Jwtgenerator::generateToken($result['id'])
             ];
         }else{
@@ -76,6 +77,20 @@ class UserRepository implements UserRepositoryInterface {
         ];
     }
 
+    /**
+     * Get user by id
+     * 
+     * @param object
+     * @return array
+     */
+    public function FindbyId($id){
+        $con = Database::connect();
+        $query = "SELECT id , name, email , avatar FROM users WHERE id = :id";
+        $stmt = $con->prepare($query);
+        $stmt->execute([":id" => $id ]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result;
+    }
     public function all(){
 
     }
@@ -107,6 +122,15 @@ class UserRepository implements UserRepositoryInterface {
         $result = $stmt->fetch();
         if($result)return true;
         else return false;
+        
+    }
+      /**
+     * Verify if the token is valide
+     * 
+     * @param object
+     * @return array
+     */
+    public function isValideToken(string $tk){
         
     }
 }

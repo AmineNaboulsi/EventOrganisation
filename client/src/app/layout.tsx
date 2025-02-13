@@ -3,6 +3,7 @@ import "./globals.css"
 import type React from "react"
 import { Toaster } from "sonner";
 import ClientNavigation from '../components/ClientNavigation'
+
 export const metadata = {
     title: "Eventler",
     description: "Book now you favourite events on our platform.",

@@ -24,12 +24,22 @@ class EventController{
         $Repository = new EventRepository();
         return $Repository->Find($_GET['limit'],$_GET['offset']);
     }
+
+     /**
+     * Save new event 
+     * 
+     * @return array
+     */
+    #[Route(uri:"/event/save" , method:'POST')]
+    public function Save(){
+        return "EditEvent";
+    }
     /**
      * Edit all events information by Id 
      * 
      * @return array
      */
-    #[Route("/event/edit" , 'PUT')]
+    #[Route(uri:"/event/edit" ,method: 'PUT')]
     public function EditEvent(){
         return "EditEvent";
     }
@@ -38,7 +48,7 @@ class EventController{
      * 
      * @return array
      */
-    #[Route("/event/delete" , 'DELETE')]
+    #[Route(uri:"/event/delete" , method:'DELETE')]
     public function DelEvent(){
         return "DelEvent";
     }
@@ -47,7 +57,7 @@ class EventController{
      * 
      * @return array
      */
-    #[Route("/event/active" , 'PATCH')]
+    #[Route(uri:"/event/active" , method:'PATCH')]
     public function ActiveEvent(){
         return "DelEvent";
     }

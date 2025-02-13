@@ -15,8 +15,10 @@ class EventRepository{
      */
     public function Find($limit,$offset){
         $con = Database::connect();
-        $sql = "SELECT e.id , e.title, e.description , e.location, e.datetime , e.image , c.name as category FROM events e
-            JOIN Categories c ON c.id = e.id
+        $sql = "SELECT e.id , e.title, e.description , e.location, e.datetime , e.image , e.places,
+            CASE WHEN c.name is NULL THEN 'unknow' ELSE c.name  END as category
+            FROM events e
+            LEFT JOIN Categories c ON c.id = e.id
             LIMIT :limit OFFSET :offset";
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':limit', $limit, \PDO::PARAM_INT);
@@ -37,8 +39,10 @@ class EventRepository{
     */
     public function FindById($id){
         $con = Database::connect();
-            $sql = "SELECT e.id , e.title, e.description , e.location, e.datetime , e.image , c.name as category FROM events e
-                JOIN Categories c ON c.id = e.id
+            $sql = "SELECT e.id , e.title, e.description , e.location, e.datetime , e.image ,e.places, 
+            CASE WHEN c.name is NULL THEN 'unknow' ELSE c.name  END as category
+            FROM events e
+            LEFT JOIN Categories c ON c.id = e.id
                 WHERE e.id=:id ";
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':id', $id, \PDO::PARAM_INT);

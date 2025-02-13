@@ -5,6 +5,8 @@ use App\Config\Routes;
 use App\Core\Router;
 
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With');
+
 Routes::load();
 Router::dispatch();
 

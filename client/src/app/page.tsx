@@ -1,13 +1,36 @@
 "use client"
 
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion"
+import CookieAccess from '../components/CookieAccess'
+import { useEffect, useState } from "react"
 
 
 export default function Home() {
+  const [DisplayTermsCookie ,setDisplayTermsCookie]= useState(false); 
+  const initilise_CookieAlertAcces = () =>{
+      if(localStorage.getItem('termsaccept')==null){
+        localStorage.setItem('termsaccept' , '0')
+      }else{
+        setDisplayTermsCookie(true)
+      }
+  }
+  useEffect(()=>{ 
+      initilise_CookieAlertAcces();
+  },[])
   return (
     <div className="min-h-screen">
+       {!DisplayTermsCookie &&
+       (
+        <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        >
+          <CookieAccess visibility={setDisplayTermsCookie} />
+        </motion.div>
+       )}
       <div className="max-w-7xl mx-auto px-4 py-20">
         <div className="text-center space-y-8">
           <motion.h1

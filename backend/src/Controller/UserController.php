@@ -5,6 +5,7 @@ use App\Config\Route;
 use App\Model\Dto\SignUpDto;
 use App\Model\Dto\LoginDto;
 use App\Repository\UserRepository;
+use App\Services\Jwtgenerator;
 class UserController{
 
      /**
@@ -30,6 +31,16 @@ class UserController{
         $UserRepository = new UserRepository();
         return $UserRepository->signup($User);
     } 
+
+    /**
+     * User statictics
+     * 
+     * @return array
+     */
+    #[Route(uri:"/user/statictics" , method:'GET')]
+    public function Statictics(){
+        return "";
+    }
 
      /**
      * 
@@ -71,4 +82,23 @@ class UserController{
         return "DelUser";
     }
     
+      /**
+     * 
+     * 
+     * @return array
+     */
+    #[Route(uri:"/validtk", method:'POST')]
+    public function isValide() {
+        $authHeader = $_SERVER["HTTP_AUTHORIZATION"] ?? $_SERVER["REDIRECT_HTTP_AUTHORIZATION"] ?? null;
+        
+        if ($authHeader && preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
+            return Jwtgenerator::VerifyToken($matches[1]);
+        }
+        
+        return [
+            "error" => "No token provided"
+        ];
+    }
+
+
 }

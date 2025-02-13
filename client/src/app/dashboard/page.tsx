@@ -63,7 +63,7 @@ export default function OrganizerDashboard() {
             <CardContent>
               <div className="space-y-4">
                 {events.map((event) => (
-                  <div key={event.id} className="flex items-center justify-between p-4 bg-white rounded-lg shadow">
+                  <div key={event.id} className="flex items-center justify-between p-4 text-black bg-white rounded-lg shadow">
                     <div>
                       <h3 className="font-semibold text-lg">{event.title}</h3>
                       <p className="text-sm text-gray-500">{event.date}</p>
