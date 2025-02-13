@@ -51,19 +51,7 @@ class EventRepository{
         return $result ;
     }
 
-    /**
-    * Get Total number fir a specific organisator
-    * 
-    * @return int
-    */
-    public function TotalEventsbyOrganisator($id){
-        $con = Database::connect();
-        $sql = "SELECT Count(*) as count FROM events where  ";
-        $stmt = $con->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-        return $result['count'];
-    }
+   
 
     /**
     * Get Total number of elements
@@ -80,17 +68,47 @@ class EventRepository{
     }
     
     /**
+    * Get Total number fir a specific organisator
+    * 
+    * @return int
+    */
+    public function TotalEventsbyOrganisator($id){
+        $con = Database::connect();
+        $sql = "SELECT Count(*) as count FROM events where userid = :id";
+        $stmt = $con->prepare($sql);
+        $stmt->execute([':id' => $id ]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result['count'];
+    }
+
+    /**
+    * Get Total number fir a specific organisator
+    * 
+    * @return int
+    */
+    public function TotalBookingbyOrganisator($id){
+        $con = Database::connect();
+        $sql = "SELECT Count(*) as count FROM booking b 
+            JOIN tickets t ON t.id = b.id 
+            JOIN users u ON u.id = t.origanisatorid 
+            WHERE u.id = :id ";
+        $stmt = $con->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result['count'];
+    }
+
+    /**
     * Statictics
     * 
     * @return int
     */
     public function getStatictics($id){
-
         return [
-            "TotalEvents" => 12,
-            "TotalBookings" => '2,500',
-            "Revenue" => '$45,678',
-            "AttendanceRate" => '87%',
+            "TotalEvents" => $this->TotalEventsbyOrganisator($id),
+            "TotalBookings" => $this->TotalBookingbyOrganisator($id),
+            "Revenue" => '$---',
+            "AttendanceRate" => '--%',
         ];
     }
     /**

@@ -90,8 +90,7 @@ class Jwtgenerator {
             $decoded = JWT::decode($token, new Key($secretKey, $algorithm));
             $decodedArray = (array)$decoded;
             $userId = $decodedArray['id'];
-            $UserRepository = new UserRepository();
-            return $UserRepository->FindbyId($userId);
+            return $userId;
 
         } catch (\Firebase\JWT\ExpiredException $e) {
             return null;

@@ -19,6 +19,10 @@ export default function Navbar() {
     setLoading(true)
     const url = process.env.NEXT_PUBLIC_API_URL;
     const authentoken = Cookies.get('authtoken');
+    if(!authentoken) {
+      setLoading(false)
+      return;
+    }
     try{
       const res = await fetch(`${url}/validtk`, {
         method: 'POST',

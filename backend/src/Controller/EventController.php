@@ -34,6 +34,7 @@ class EventController{
      */
     #[Route(uri:"/user/statictics" , method:'GET')]
     public function Statictics(){
+        
         $token = ValidationController::getTk();
         if($token!=null){
             $id = Jwtgenerator::getIdToken($token);
