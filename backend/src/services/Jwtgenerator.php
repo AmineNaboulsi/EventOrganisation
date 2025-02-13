@@ -75,6 +75,32 @@ class Jwtgenerator {
             ]; //Token is invalid due to general error
         }
     }
+    
+    /**
+     * 
+     * 
+     * @return array
+     */
+    public static function getIdToken($token){
+        $dotenv = Dotenv::createImmutable(realpath(__DIR__ . '/../../'));
+        $dotenv->load();
+        try {
+            $secretKey = $_ENV['KETTKSECURE'];
+            $algorithm = 'HS256';
+            $decoded = JWT::decode($token, new Key($secretKey, $algorithm));
+            $decodedArray = (array)$decoded;
+            $userId = $decodedArray['id'];
+            $UserRepository = new UserRepository();
+            return $UserRepository->FindbyId($userId);
+
+        } catch (\Firebase\JWT\ExpiredException $e) {
+            return null;
+        } catch (\Firebase\JWT\SignatureInvalidException $e) {
+            return null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 
 }
 

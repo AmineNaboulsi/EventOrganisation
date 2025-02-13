@@ -32,16 +32,6 @@ class UserController{
         return $UserRepository->signup($User);
     } 
 
-    /**
-     * User statictics
-     * 
-     * @return array
-     */
-    #[Route(uri:"/user/statictics" , method:'GET')]
-    public function Statictics(){
-        return "";
-    }
-
      /**
      * 
      * 

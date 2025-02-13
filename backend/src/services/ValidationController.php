@@ -9,7 +9,7 @@ class ValidationController{
      * 
      * @param array $parametres
      * @param array $data
-     * @return bool
+     * @return string|null
      */
     public static function Validation($parametres , $data){ 
         foreach ($parametres as $para => $dtype) {
@@ -55,6 +55,13 @@ class ValidationController{
             }
         }
         return true;
+    }
+    public static function getTk()  {
+        $authHeader = $_SERVER["HTTP_AUTHORIZATION"] ?? $_SERVER["REDIRECT_HTTP_AUTHORIZATION"] ?? null;
+        if ($authHeader && preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
+            return $matches[1];
+        }
+        return null;
     }
 }
 

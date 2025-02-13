@@ -3,7 +3,8 @@
 namespace App\Controller;
 use App\Config\Route;
 use App\Repository\EventRepository;
-
+use App\Services\Jwtgenerator;
+use App\Services\ValidationController;
 class EventController{
     /**
      * 
@@ -24,6 +25,26 @@ class EventController{
         $Repository = new EventRepository();
         return $Repository->Find($_GET['limit'],$_GET['offset']);
     }
+
+    
+    /**
+     * User statictics
+     * 
+     * @return array
+     */
+    #[Route(uri:"/user/statictics" , method:'GET')]
+    public function Statictics(){
+        $token = ValidationController::getTk();
+        if($token!=null){
+            $id = Jwtgenerator::getIdToken($token);
+            if($id != null){
+                $Repository = new EventRepository();
+                return $Repository->getStatictics($id);
+            }
+        }
+        return 'null';
+    }
+
 
      /**
      * Save new event 

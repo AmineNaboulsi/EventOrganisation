@@ -1,6 +1,5 @@
 'use client'
 
-
 export default function CookieAccess({visibility}:any) {
   const Accept = () =>{
     localStorage.setItem('termsaccept' , '1')

@@ -52,6 +52,20 @@ class EventRepository{
     }
 
     /**
+    * Get Total number fir a specific organisator
+    * 
+    * @return int
+    */
+    public function TotalEventsbyOrganisator($id){
+        $con = Database::connect();
+        $sql = "SELECT Count(*) as count FROM events where  ";
+        $stmt = $con->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result['count'];
+    }
+
+    /**
     * Get Total number of elements
     * 
     * @return int
@@ -65,6 +79,20 @@ class EventRepository{
         return $result['count'];
     }
     
+    /**
+    * Statictics
+    * 
+    * @return int
+    */
+    public function getStatictics($id){
+
+        return [
+            "TotalEvents" => 12,
+            "TotalBookings" => '2,500',
+            "Revenue" => '$45,678',
+            "AttendanceRate" => '87%',
+        ];
+    }
     /**
     * Edit All Event Data
     * 
