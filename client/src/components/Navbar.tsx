@@ -1,31 +1,46 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { useEffect } from "react"
-// import Cookies from 'js-cookie';
+import { useEffect , useState} from "react"
+import Cookies from 'js-cookie';
 
+type User = {
+  id: number,
+  name: string,
+  email: string ,
+  avatar: string
+}
 export default function Navbar() {
 
-  // const [isLogin , setLogin] = useState(false);
+  const [isLogin , setLogin] = useState<boolean>(false);
+  const [User , setUser] = useState<User>();
+  const [isLoading , setLoading] = useState(true);
 
-  // const Validatetoken = () =>{
-
-  //   const url = process.env.NEXT_PUBLIC_API_URL;
-  //   const authentoken = Cookies.get('authtoken');
-  //   fetch(`${url}/validtk`, {
-  //     method: 'POST',
-  //     headers: {
-  //         'Authorization': `Bearer ${authentoken}`,
-  //         'Content-Type': 'application/json',
-  //     },
-  //   })
-  //   .then(response => response.json())
-  //   .then(data => console.log(data))
-  //   .catch(error => console.error('Error:', error));
-  //   setLogin(true)
-  // }
+  const Validatetoken = async () =>{
+    setLoading(true)
+    const url = process.env.NEXT_PUBLIC_API_URL;
+    const authentoken = Cookies.get('authtoken');
+    try{
+      const res = await fetch(`${url}/validtk`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${authentoken}`
+        },
+      });
+      const data = await res.json();
+      if(!data.error){
+        setUser(data)
+      }
+      setLogin(true)
+      setLoading(false)
+    }catch(error){
+      console.log(error)
+      setLogin(false)
+      setLoading(false)
+    }
+  }
 
   useEffect(()=>{
-   // Validatetoken();
+    Validatetoken();
   },[])
   
   return (
@@ -44,23 +59,39 @@ export default function Navbar() {
             <Link href="/events" className="text-gray-300 hover:text-white transition duration-300">
               Events
             </Link>
-            {1!=1 
+            {isLogin 
             ? 
               <>
-              Login
-              </> 
+                <div className="flex items-center gap-2 cursor-pointer transition-all p-2 hover:bg-[#262728] rounded-">
+                  <div className="relative rounded-full p-4 bg-green-600">
+                    <div className="absolute inset-0 flex justify-center items-center">
+                        <span className="text-xl capitalize mb-0.5">{User?.name[0]}</span>
+                    </div>
+                  </div>
+                  <span className="text-gray-300">{User?.email}</span>
+                </div> 
+              </>
             : 
               <>
-            <Link href="/auth/signin">
-              <Button className="text-gray-300 hover:bg-transparent bg-transparent hover:text-white">
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/auth/signup">
-              <Button className="bg-[#a56bf0] text-black hover:bg-[#6d499c]/94 rounded-md">Sign Up</Button>
-            </Link>
+              {
+                isLoading  ? 
+                <>
+                </> 
+                :
+                <>
+                 <Link href="/auth/signin">
+                  <Button className="text-gray-300 hover:bg-transparent bg-transparent hover:text-white">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/auth/signup">
+                  <Button className="bg-[#a56bf0] text-black hover:bg-[#6d499c]/94 rounded-md">Sign Up</Button>
+                </Link>
+                </>
+              }
               </>
             }
+            
           </div>
         </div>
       </div>

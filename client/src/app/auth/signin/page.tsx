@@ -43,10 +43,12 @@ export default function SignIn() {
       }
       toast.error(data.message);
       Cookies.set('authtoken', data.token, { expires: 1 });
-      router.push("/events") 
+      if(data.role=="organisator") router.push("/dashboard")
+      else if(data.role=="admin") router.push("/admin")
+      else router.push("/events")
     } catch {
       toast.error("Login failed, please try later");
-    } finally {
+    } finally{
       setIsLoading(false)
     }
 

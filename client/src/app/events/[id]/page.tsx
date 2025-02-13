@@ -91,7 +91,7 @@ export default function EventPage({ params }: Props) {
                                             {Event?.category}
                                         </div>
                                         <div className="absolute bottom-4 left-4 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full">
-                                            <span className="text-2xl font-bold text-white">$event.price</span>
+                                            <span className="text-2xl font-bold text-white">FREE </span>
                                             <span className="text-white/70">/person</span>
                                         </div>
                                     </div>
